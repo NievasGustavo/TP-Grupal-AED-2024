@@ -64,8 +64,6 @@ pago = int(input("Forma de pago (1: efectivo - 2: tarjeta): "))
 
 # 4. Mostrar los importes tanto inicial como final, incluso si son iguales.
 
-
-
 """
 print("País de destino del envío:", destino)
 print("Provincia destino:", provincia)
