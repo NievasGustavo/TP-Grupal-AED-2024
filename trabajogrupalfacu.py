@@ -42,10 +42,10 @@ Datos:
 
 
 cp = input("Ingrese el código postal del lugar de destino: ").upper()
-"""
-direccion = input("Dirección del lugar de destino: ")
 tipo = int(input("Tipo de envío (0: normal - 1: express - 2: "))
+"""
 pago = int(input("Forma de pago (1: efectivo - 2: tarjeta): "))
+direccion = input("Dirección del lugar de destino: ")
 """
 
 # 1. Indicar el nombre del país de destino basado en el formato de los CP de Argentina y
@@ -56,7 +56,7 @@ if cp[0].isdigit():
         destino = "Bolivia"
         provincia = "No aplica"
 
-    elif len(cp[0:5]) == 5 and cp[5] == "-" and len(cp) == 9:
+    elif len(cp[:5]) == 5 and cp[5] == "-" and len(cp) == 9:
         destino = "Brasil"
         provincia = "No aplica"
 
@@ -79,7 +79,7 @@ if cp[0].isdigit():
 #    el estándar ISO 3166-2:AR. Si el envío es internacional o
 #   hacia otro lugar fuera de Argentina, mostrar "No aplica".
 else:
-    if cp[0] != "I" or cp[0] != "O":
+    if cp[0] != "I" and cp[0] != "O" and len(cp) == 8 and cp[1:5].isdigit():
         destino = "Argentina"
         if cp[0] == "A":
             provincia = "Salta"
