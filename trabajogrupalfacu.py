@@ -46,10 +46,15 @@ direccion = input("Dirección del lugar de destino: ")
 tipo = int(input("Tipo de envío (id entre 0 y 6 ): "))
 pago = int(input("Forma de pago (1: efectivo - 2: tarjeta): "))
 
-##PAISES:
-long =len(cp)
+# PAISES:
+long = len(cp)
+"""
+Aca evaluas si es Argentina pero si if long == 8 es False seguis evaluando las letras en el Codigo Postal,
+esto relentiza el codigo a algo que sabes que es falso (el resto de codigos postales no tiene letra en
+el primer digito).
+"""
 if long == 8:
- destino = "Argentina"
+    destino = "Argentina"
 if cp[0] == "A":
     provincia = "Salta"
 if cp[0] == "B":
@@ -98,52 +103,54 @@ if cp[0] == "Y":
     provincia = "Jujuy"
 if cp[0] == "Z":
     provincia = "Santa Cruz"
+
+# Aca igual esto iria en un else o deberias evaularlo primero para no evaluar todas las provincias
+# innecesariamente
 if cp[0] == "I" or cp[0] == "Ñ" or cp[0] == "O":
     provincia = "No Aplica"
 
 
 if long == 4:
-  destino = "Bolivia"
-  provincia = "No Aplica"
+    destino = "Bolivia"
+    provincia = "No Aplica"
 if long == 9:
-  destino = "Brasil"
-  provincia = "No Aplica"
+    destino = "Brasil"
+    provincia = "No Aplica"
 if long == 7:
-  destino = "Chile"
-  provincia = "No Aplica"
+    destino = "Chile"
+    provincia = "No Aplica"
 if long == 6:
- destino = "Paraguay"
- provincia = "No Aplica"
+    destino = "Paraguay"
+    provincia = "No Aplica"
 if long == 5:
- destino = "Uruguay"
- provincia = "No Aplica"
-if long <=3 or long >=10:
+    destino = "Uruguay"
+    provincia = "No Aplica"
+if long <= 3 or long >= 10:
     destino = "Otros Paises"
     provincia = "No Aplica"
 
 
-
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
-#PRECIO POR PESO:
+# -#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+# PRECIO POR PESO:
 if tipo == 0:
-   inicial = 1100
+    inicial = 1100
 if tipo == 1:
-   inicial = 1800
+    inicial = 1800
 if tipo == 2:
-   inicial = 2450
+    inicial = 2450
 if tipo == 3:
-   inicial = 8300
+    inicial = 8300
 if tipo == 4:
-   inicial = 10900
+    inicial = 10900
 if tipo == 5:
-   inicial = 14300
+    inicial = 14300
 if tipo == 6:
-   inicial = 17900
+    inicial = 17900
 
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
-#ENVIOS INTERNACIONALES:
+# -#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+# ENVIOS INTERNACIONALES:
 if destino == "Uruguay" and cp[0] == 1:
-    porcentaje = (inicial * 20) /100
+    porcentaje = (inicial * 20) / 100
     inicial = inicial + porcentaje
 else:
     porcentaje = (inicial * 25) / 100
@@ -157,7 +164,9 @@ if destino == "Chile":
     porcentaje = (inicial * 25) / 100
     inicial = inicial + porcentaje
 
-if direccion == "Brasil" and cp[0] >= 8 :
+# En direccion creo que va una calle, no necesariamente el pais
+# aca deberias validarlo con el Codigo Postal
+if direccion == "Brasil" and cp[0] >= 8:
     porcentaje = (inicial * 20) / 100
     inicial = inicial + porcentaje
 if direccion == "Brasil" and cp[0] >= 0 and cp[0] <= 3:
