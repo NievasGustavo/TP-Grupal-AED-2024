@@ -42,11 +42,9 @@ Datos:
 
 
 cp = input("Ingrese el código postal del lugar de destino: ").upper()
-tipo = int(input("Tipo de envío (0: normal - 1: express - 2: "))
-"""
+tipo = int(input("Elija el tipo de envío (0-6): "))
 pago = int(input("Forma de pago (1: efectivo - 2: tarjeta): "))
 direccion = input("Dirección del lugar de destino: ")
-"""
 
 # 1. Indicar el nombre del país de destino basado en el formato de los CP de Argentina y
 #    sus países vecinos. Si el CP no coincide con ninguno de estos formatos, se debe informar
@@ -132,9 +130,173 @@ else:
     else:
         destino = "Otro"
         provincia = "No aplica"
+
+
 # 3. Calcular el importe inicial a pagar por el envío, utilizando las tablas proporcionadas.
 #    Si la forma de pago es en efectivo, aplicar un descuento del 10% al importe inicial
 #   y mostrar por separado el importe final a pagar.
+
+# Calculamos el importe inical, dejando el incial sin tocar si es en Argentina
+if tipo == 0:
+    inicial = 1100
+if tipo == 1:
+    inicial = 1800
+if tipo == 2:
+    inicial = 2450
+if tipo == 3:
+    inicial = 8300
+if tipo == 4:
+    inicial = 10900
+if tipo == 5:
+    inicial = 14300
+if tipo == 6:
+    inicial = 17900
+
+if destino != "Argentina":
+    if destino == "Bolivia" or destino == "Paraguay" or destino == "Uruguay" and cp[0] == 1:
+        if tipo == 0:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 1:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 2:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 3:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 4:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 5:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 6:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+
+    elif destino == "Chile" or "Uruguay":
+        if tipo == 0:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 1:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 2:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 3:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 4:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 5:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 6:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+
+    elif destino == "Brasil" and cp[0] >= 8:
+        if tipo == 0:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 1:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 2:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 3:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 4:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 5:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 6:
+            porcentaje = (20 / 100) * inicial
+            inicial = porcentaje + inicial
+
+    elif destino == "Brasil" and cp[0] >= 0 and cp[0] <= 3:
+        if tipo == 0:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 1:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 2:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 3:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 4:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 5:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 6:
+            porcentaje = (25 / 100) * inicial
+            inicial = porcentaje + inicial
+
+    elif destino == "Brasil" and cp[0] >= 4 and cp[0] <= 7:
+        if tipo == 0:
+            porcentaje = (30 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 1:
+            porcentaje = (30 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 2:
+            porcentaje = (30 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 3:
+            porcentaje = (30 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 4:
+            porcentaje = (30 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 5:
+            porcentaje = (30 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 6:
+            porcentaje = (30 / 100) * inicial
+            inicial = porcentaje + inicial
+
+    else:
+        if tipo == 0:
+            porcentaje = (50 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 1:
+            porcentaje = (50 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 2:
+            porcentaje = (50 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 3:
+            porcentaje = (50 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 4:
+            porcentaje = (50 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 5:
+            porcentaje = (50 / 100) * inicial
+            inicial = porcentaje + inicial
+        if tipo == 6:
+            porcentaje = (50 / 100) * inicial
+            inicial = porcentaje + inicial
+
+
+# Calculamos el pago final, aplicando el descuento del 10% al importe inicial si es en efectivo
+if pago == 1:
+    final = inicial - (10 / 100) * inicial
+if pago == 2:
+    final = inicial
 
 
 # 4. Mostrar los importes tanto inicial como final, incluso si son iguales.
@@ -142,7 +304,5 @@ else:
 
 print("País de destino del envío:", destino)
 print("Provincia destino:", provincia)
-"""
 print("Importe inicial a pagar:", inicial)
 print("Importe final a pagar:", final)
-"""
