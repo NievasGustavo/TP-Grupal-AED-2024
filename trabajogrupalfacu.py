@@ -42,9 +42,10 @@ Datos:
 
 
 cp = input("Ingrese el código postal del lugar de destino: ").upper()
+direccion = input("Dirección del lugar de destino: ")
 tipo = int(input("Elija el tipo de envío (0-6): "))
 pago = int(input("Forma de pago (1: efectivo - 2: tarjeta): "))
-direccion = input("Dirección del lugar de destino: ")
+
 
 # 1. Indicar el nombre del país de destino basado en el formato de los CP de Argentina y
 #    sus países vecinos. Si el CP no coincide con ninguno de estos formatos, se debe informar
@@ -302,7 +303,7 @@ if pago == 2:
 # 4. Mostrar los importes tanto inicial como final, incluso si son iguales.
 
 
-print("País de destino del envío:", destino)
+print("\nPaís de destino del envío:", destino)
 print("Provincia destino:", provincia)
 print("Importe inicial a pagar:", inicial)
 print("Importe final a pagar:", final)
