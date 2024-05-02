@@ -48,13 +48,6 @@ tipo = int(input("Tipo de envío (0: normal - 1: express - 2: "))
 pago = int(input("Forma de pago (1: efectivo - 2: tarjeta): "))
 """
 
-cp_arg = {"A": "Salta", "B": "Buenos Aires", "C": "CABA", "D": "San Luis", "E": "Entre Ríos",
-          "F": "La Rioja", "G": "Santiago del Estero", "H": "Chaco", "J": "San Juan",
-          "K": "Cataraca", "L": "La Pampa", "M": "Mendoza", "N": "Misiones", "P": "Formosa",
-          "Q": "Neuquén", "R": "Rio Negro", "S": "Santa Fe", "T": "Tucumén", "U": "Chubut",
-          "V": "Tierra del Fuego", "W": "Corrientes", "X": "Cordoba", "Y": "Jujuy", "Z": "Santa Cruz"
-          }
-
 # 1. Indicar el nombre del país de destino basado en el formato de los CP de Argentina y
 #    sus países vecinos. Si el CP no coincide con ninguno de estos formatos, se debe informar
 #   que el país es "Otro".
@@ -86,9 +79,56 @@ if cp[0].isdigit():
 #    el estándar ISO 3166-2:AR. Si el envío es internacional o
 #   hacia otro lugar fuera de Argentina, mostrar "No aplica".
 else:
-    if cp[0] in cp_arg and len(cp) == 8:
+    if cp[0] != "I" or cp[0] != "O":
         destino = "Argentina"
-        provincia = cp_arg[cp[0]]
+        if cp[0] == "A":
+            provincia = "Salta"
+        if cp[0] == "B":
+            provincia = "Buenos Aires"
+        if cp[0] == "C":
+            provincia = "CABA"
+        if cp[0] == "D":
+            provincia = "San Luis"
+        if cp[0] == "E":
+            provincia = "Entre Ríos"
+        if cp[0] == "F":
+            provincia = "La Rioja"
+        if cp[0] == "G":
+            provincia = "Santiago del Estero"
+        if cp[0] == "H":
+            provincia = "Chaco"
+        if cp[0] == "J":
+            provincia = "San Juan"
+        if cp[0] == "K":
+            provincia = "Catamarca"
+        if cp[0] == "L":
+            provincia = "La Pampa"
+        if cp[0] == "M":
+            provincia = "Mendoza"
+        if cp[0] == "N":
+            provincia = "Misiones"
+        if cp[0] == "P":
+            provincia = "Formosa"
+        if cp[0] == "Q":
+            provincia = "Neuquén"
+        if cp[0] == "R":
+            provincia = "Rio Negro"
+        if cp[0] == "S":
+            provincia = "Santa Fe"
+        if cp[0] == "T":
+            provincia = "Tucumano"
+        if cp[0] == "U":
+            provincia = "Chubut"
+        if cp[0] == "V":
+            provincia = "Tierra del Fuego"
+        if cp[0] == "W":
+            provincia = "Corrientes"
+        if cp[0] == "X":
+            provincia = "Cordoba"
+        if cp[0] == "Y":
+            provincia = "Jujuy"
+        if cp[0] == "Z":
+            provincia = "Santa Cruz"
     else:
         destino = "Otro"
         provincia = "No aplica"
