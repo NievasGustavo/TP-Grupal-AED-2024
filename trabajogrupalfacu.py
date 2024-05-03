@@ -166,13 +166,13 @@ if destino == "Chile":
 
 # En direccion creo que va una calle, no necesariamente el pais
 # aca deberias validarlo con el Codigo Postal
-if direccion == "Brasil" and cp[0] >= 8:
+if destino == "Brasil" and cp[0] >= 8:
     porcentaje = (inicial * 20) / 100
     inicial = inicial + porcentaje
-if direccion == "Brasil" and cp[0] >= 0 and cp[0] <= 3:
+if destino == "Brasil" and cp[0] >= 0 and cp[0] <= 3:
     porcentaje = (inicial * 25) / 100
     inicial = inicial + porcentaje
-if direccion == "Brasil" and cp[0] >= 4 and cp[0] <= 7:
+if destino == "Brasil" and cp[0] >= 4 and cp[0] <= 7:
     porcentaje = (inicial * 30) / 100
     inicial = inicial + porcentaje
 
