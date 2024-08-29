@@ -217,8 +217,8 @@ def importe_final(v, tipo):
                                              envio.tipo, envio.forma_pago, envio.pais)
 
     for i in range(len(cant)):
-        print(f"\n\033[92m El importe final de los envíos de tipo {
-              i} es de ${cant[i]}\033[0m")
+        print("\n\033[92m El importe final de los envíos de tipo"
+              f"{i} es de ${cant[i]}\033[0m")
 
     return cant
 
@@ -242,8 +242,8 @@ def porcentaje(cant, may_imp):
     for monto in cant:
         total += monto
     porcentaje_imp = int((may_imp / total) * 100)
-    print(f"\n\033[92m El monto total mayor es de {
-          porcentaje_imp}% sobre el monto total de envíos\033[0m")
+    print(f"\n\033[92m El monto total mayor es de {porcentaje_imp}%"
+          "sobre el monto total de envíos\033[0m")
 
 
 def promedio_importe(cant):
@@ -262,6 +262,7 @@ def menor_importe(cant, imp_prom):
         if imp_prom > monto:
             cont_imp_men += 1
     print(f"\n\033[92m El menor importe final es de ${cont_imp_men}\033[0m")
-    
+
+
 def buscar_tipo_direc(v, buscar_direccion, buscar_tipo_env):
     pass
