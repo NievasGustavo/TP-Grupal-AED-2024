@@ -1,12 +1,14 @@
 import clase
 
+
 def procesar_linea(linea):
     cp = linea[:9].strip()
-    dir = linea[9:29].strip()
+    direc = linea[9:29].strip()
     tipo = linea[29].strip()
     fp = linea[30].strip()
-    envio = clase.Envio(cp, dir, tipo, fp)
+    envio = clase.Envio(cp, direc, tipo, fp)
     return envio
+
 
 def shellsort(envios):
     n = len(envios)
@@ -23,11 +25,12 @@ def shellsort(envios):
                 envios[j] = envios[j - gap]
                 j -= gap
             envios[j] = temp
-        
+
         # Reduce el intervalo
         gap //= 2
 
     return envios
+
 
 def valid_direc(direc):
     last_car_mayus = False
@@ -56,9 +59,10 @@ def valid_direc(direc):
             else:
                 return False
 
+
 def procesar_archivo():
     v = []
-    archivo = open("envios-tp3.txt")
+    archivo = open("envios-tp3.txt", "r")
     control = archivo.readline()
     if "HC" in control or "hc" in control:
         tipo = "HC"
@@ -70,16 +74,17 @@ def procesar_archivo():
     archivo.close()
     v = shellsort(v)
     print(f"\n\033[92mSe cargaron {len(v)} envios\033[0m")
-    return v, control, tipo
+    return v, tipo
 
 
 def mostrar_vector(v):
-    opcion = input("¿Desea mostrar todos los envios? (si: 0, no: 1) ")
+    cantidad = len(v)
+    opcion = input(f"¿Desea mostrar los {cantidad} envios? (si: 0, no: 1) ")
     while not opcion.isnumeric() or int(opcion) < 0 or int(opcion) > 1:
         print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
         opcion = input("¿Desea mostrar todos los envios? (si: 0, no: 1) ")
     if int(opcion) == 0:
-        for i in range(len(v)):
+        for i in range(cantidad):
             print(f"{i + 1}) {v[i]}")
     else:
         nro_mostrar = input("Ingrese la cantidad de envios a mostrar: ")
@@ -87,7 +92,7 @@ def mostrar_vector(v):
             print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
             nro_mostrar = input("Ingrese la cantidad de envios a mostrar: ")
         for i in range(int(nro_mostrar)):
-            print(f"{i + 1}) {v[i]}")
+            print(f"{i}) {v[i]}")
 
 
 def menu():
@@ -102,7 +107,7 @@ def menu():
         "  7. Determinar importe final de los envíos",
         "  8. Determinar envio con mayor importe final",
         "  9. Calcular promedio de importe por tipo de envío",
-        "  0. Salir\n"
+        "  0. Salir",
         "╚═══════════════════════════╝"
     ]
 
@@ -110,7 +115,7 @@ def menu():
         print(opcion)
 
     opcion_ingresada = input("Ingrese la opcion: ")
-    
+
     if not opcion_ingresada.isnumeric() or int(opcion_ingresada) < 0 or int(opcion_ingresada) > 9:
         print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
         return menu()
@@ -119,38 +124,41 @@ def menu():
 
 def carga_manual(v):
     cp = input("Ingrese el código postal: ")
-    dir = input("Ingrese la dirección de destino: ")
+    direc = input("Ingrese la dirección de destino: ")
 
     tipo = input("Ingrese el tipo de envío: ")
     while not tipo.isnumeric() or int(tipo) < 0 or int(tipo) > 6:
         print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
-        input("Ingrese el tipo de envío: ")
+        tipo = input("Ingrese el tipo de envío: ")
 
     fp = input("Ingrese la forma de pago: ")
-    while not fp.isnumeric() or int(fp) < 0 or int(fp) > 2:
+    while not fp.isnumeric() or int(fp) < 0 or int(fp) > 1:
         print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
-        input("Ingrese la forma de pago: ")
-    
-    envio = clase. Envio(cp, dir, tipo, fp)
+        fp = input("Ingrese la forma de pago: ")
+
+    envio = clase. Envio(cp, direc, tipo, fp)
     v.append(envio)
     return v
+
 
 def cant_envios(v, tipo):
     cant = [0] * 7
     if tipo == "HC":
         for envio in v:
             if valid_direc(envio.direccion):
-                if 1 <= int(envio.tipo) <= 6:
-                    cant[int(envio.tipo) - 1] += 1
+                tipo_envio = int(envio.tipo)
+                if 0 <= tipo_envio or tipo_envio <= 6:
+                    cant[tipo_envio] += 1
     else:
         for envio in v:
-            if 1 <= int(envio.tipo) <= 6:
-                cant[int(envio.tipo) - 1] += 1
-    
+            tipo_envio = int(envio.tipo)
+            if 0 <= tipo_envio or tipo_envio <= 6:
+                cant[tipo_envio] += 1
+
     for i in range(len(cant)):
         print(f"\n\033[92m Hay {cant[i]} envios de tipo {i}\033[0m")
 
-        
+
 def calc_imp(cp, env, pago, destino):
     # 3. Calcular el importe inicial del envío.
     inicial = 0
@@ -191,22 +199,29 @@ def calc_imp(cp, env, pago, destino):
         final = inicial
     return final
 
+
 def importe_final(v, tipo):
     cant = [0] * 7
     if tipo == "HC":
         for envio in v:
             if valid_direc(envio.direccion):
-                if 1 <= int(envio.tipo) <= 6:
-                    cant[int(envio.tipo) - 1] += calc_imp(envio.codigo_postal, envio.tipo, envio.forma_pago, envio.pais)
+                tipo_envio = int(envio.tipo)
+                if 0 <= tipo_envio or tipo_envio <= 6:
+                    cant[tipo_envio] += calc_imp(envio.codigo_postal,
+                                                 envio.tipo, envio.forma_pago, envio.pais)
     else:
         for envio in v:
-            if 1 <= int(envio.tipo) <= 6:
-                cant[int(envio.tipo) - 1] += calc_imp(envio.codigo_postal, envio.tipo, envio.forma_pago, envio.pais)
-    
+            tipo_envio = int(envio.tipo)
+            if 0 <= tipo_envio or tipo_envio <= 6:
+                cant[tipo_envio] += calc_imp(envio.codigo_postal,
+                                             envio.tipo, envio.forma_pago, envio.pais)
+
     for i in range(len(cant)):
-        print(f"\n\033[92m El importe final de los envíos de tipo {i} es de ${cant[i]}\033[0m")
-    
+        print(f"\n\033[92m El importe final de los envíos de tipo {
+              i} es de ${cant[i]}\033[0m")
+
     return cant
+
 
 def may_importe(cant):
     primer_may = True
@@ -218,24 +233,28 @@ def may_importe(cant):
             if may < cant[i]:
                 may = cant[i]
     print(f"\n\033[92m El mayor importe final es de ${may}\033[0m")
-    
+
     return may
-    
+
+
 def porcentaje(cant, may_imp):
     total = 0
     for monto in cant:
         total += monto
-    porcentaje = int((may_imp / total) * 100)
-    print(f"\n\033[92m El monto total mayor es de {porcentaje}% sobre el monto total de envíos\033[0m")
-    
+    porcentaje_imp = int((may_imp / total) * 100)
+    print(f"\n\033[92m El monto total mayor es de {
+          porcentaje_imp}% sobre el monto total de envíos\033[0m")
+
+
 def promedio_importe(cant):
     total = 0
     for monto in cant:
         total += monto
     prom = int(total / len(cant))
     print(f"\n\033[92m El promedio de importe final es de ${prom}\033[0m")
-    
+
     return prom
+
 
 def menor_importe(cant, imp_prom):
     cont_imp_men = 0
@@ -243,3 +262,6 @@ def menor_importe(cant, imp_prom):
         if imp_prom > monto:
             cont_imp_men += 1
     print(f"\n\033[92m El menor importe final es de ${cont_imp_men}\033[0m")
+    
+def buscar_tipo_direc(v, buscar_direccion, buscar_tipo_env):
+    pass
