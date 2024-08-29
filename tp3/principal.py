@@ -1,6 +1,6 @@
 from funciones import procesar_archivo, carga_manual, mostrar_vector, \
     menu, cant_envios, importe_final, may_importe, \
-    porcentaje, promedio_importe, menor_importe, buscar_tipo_direc
+    porcentaje, promedio_importe, menor_importe, busqueda_lineal, busqueda_binaria
 
 
 def principal():
@@ -9,6 +9,7 @@ def principal():
     tipo = "HC"
     vector_importe = []
     may_imp = imp_menor = 0
+    se_cargo_archivo = False
     while opcion != 0:
         opcion = menu()
 
@@ -23,31 +24,48 @@ def principal():
                         "¿Desea sobreescribir el mismo? (si: 0, no: 1) ")
                 if int(borrar) == 1:
                     continue
+            se_cargo_archivo = True
             v, tipo = procesar_archivo()
+            input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 2:
             carga_manual(v)
+            input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 3:
             if len(v) == 0:
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
+                input("\nIngrese cualquier tecla para continuar...")
                 continue
             mostrar_vector(v)
+            input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 4:
             if len(v) == 0:
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
+                input("\nIngrese cualquier tecla para continuar...")
                 continue
+           
             buscar_direccion = input(
-                "Por favor, introduzca la dirección a buscar: ")
+                "Por favor, introduzca la dirección a buscar (Debe terminar en .): ")
+            while not buscar_direccion:
+                print("\n\033[91m ¤ ¡Ingrese una dirección! ¤ \033[0m\n")
+                buscar_direccion = input(
+                    "Por favor, introduzca la dirección a buscar (Debe terminar en .): ")
+        
             buscar_tipo_env = input(
                 "Por favor, introduzca el tipo de envío a buscar: ")
             while not buscar_tipo_env.isnumeric() or \
-                    int(buscar_direccion) < 0 or int(buscar_direccion) > 6:
+                    int(buscar_tipo_env) < 0 or int(buscar_tipo_env) > 6:
                 print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
                 buscar_tipo_env = input(
                     "Por favor, introduzca el tipo de envío a buscar: ")
-            buscar_tipo_direc(v, buscar_direccion, buscar_tipo_env)
+            #if se_cargo_archivo:
+            #    busqueda_binaria(v, buscar_direccion, buscar_tipo_env)
+            #    input("\nIngrese cualquier tecla para continuar...")
+            #    continue
+            busqueda_lineal(v, buscar_direccion, buscar_tipo_env)
+            input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 5:
             pass
@@ -55,32 +73,42 @@ def principal():
         elif opcion == 6:
             if len(v) == 0:
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
+                input("\nIngrese cualquier tecla para continuar...")
                 continue
             cant_envios(v, tipo)
+            input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 7:
             if len(v) == 0:
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
+                input("\nIngrese cualquier tecla para continuar...")
                 continue
+                input("\nIngrese cualquier tecla para continuar...")
             vector_importe = importe_final(v, tipo)
+            input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 8:
             if len(vector_importe) == 0:
                 print(
                     "\n\033[91mADVERTENCIA: ¡Debe calcular los importes"
                     " finales de los envios!\033[0m")
+                input("\nIngrese cualquier tecla para continuar...")
                 continue
             may_imp = may_importe(vector_importe)
             porcentaje(vector_importe, may_imp)
+            input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 9:
             if len(vector_importe) == 0:
                 print(
                     "\n\033[91mADVERTENCIA: ¡Debe calcular los importes"
                     " finales de los envios!\033[0m")
+                input("\nIngrese cualquier tecla para continuar...")
                 continue
             imp_menor = promedio_importe(vector_importe)
             menor_importe(vector_importe, imp_menor)
+            input("\nIngrese cualquier tecla para continuar...")
+
         elif opcion == 0:
             print("\n\033[92m ¡HASTA LUEGO! \033[0m")
 

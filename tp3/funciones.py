@@ -10,7 +10,7 @@ def procesar_linea(linea):
     return envio
 
 
-def shellsort(envios):
+def shellsort(envios, parametro="cp"):
     n = len(envios)
     gap = n // 2  # Inicialmente, el intervalo es la mitad de la longitud de la lista
 
@@ -20,9 +20,27 @@ def shellsort(envios):
         for i in range(gap, n):
             temp = envios[i]
             j = i
-            # Compara los elementos separados por el intervalo y los mueve si es necesario
-            while j >= gap and envios[j - gap].codigo_postal > temp.codigo_postal:
-                envios[j] = envios[j - gap]
+
+            # Comparar los elementos separados por el intervalo según el parámetro especificado
+            while j >= gap:
+                if parametro == "direccion":
+                    compare1 = envios[j - gap].direccion
+                    compare2 = temp.direccion
+                elif parametro == "tipo":
+                    compare1 = envios[j - gap].tipo
+                    compare2 = temp.tipo
+                elif parametro == "cp":
+                    compare1 = envios[j - gap].codigo_postal
+                    compare2 = temp.codigo_postal
+                else:
+                    compare1 = (envios[j - gap].direccion, envios[j - gap].tipo)
+                    compare2 = (temp.direccion, temp.tipo)
+
+                # Si el elemento separado es mayor que el elemento temporal, se intercambian
+                if compare1 > compare2:
+                    envios[j] = envios[j - gap]
+                else:
+                    break
                 j -= gap
             envios[j] = temp
 
@@ -118,6 +136,7 @@ def menu():
 
     if not opcion_ingresada.isnumeric() or int(opcion_ingresada) < 0 or int(opcion_ingresada) > 9:
         print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
+        input("\nIngrese cualquier tecla para continuar...")
         return menu()
     return int(opcion_ingresada)
 
@@ -138,6 +157,8 @@ def carga_manual(v):
 
     envio = clase. Envio(cp, direc, tipo, fp)
     v.append(envio)
+
+    print(f"\n\033[92mSe cargo el envío {envio}\033[0m")
     return v
 
 
@@ -264,5 +285,28 @@ def menor_importe(cant, imp_prom):
     print(f"\n\033[92m El menor importe final es de ${cont_imp_men}\033[0m")
 
 
-def buscar_tipo_direc(v, buscar_direccion, buscar_tipo_env):
-    pass
+def busqueda_lineal(v, primer_parametro, segundo_parametro):
+    for envio in v:
+        if envio.direccion == primer_parametro and envio.tipo == segundo_parametro:
+            print(f"\n\033[92m El envío encontrado es: {envio}\033[0m")
+            return
+    print("\n\033[91m ¡No se ha encontrado el envío!\033[0m")
+
+def busqueda_binaria(v, primer_parametro, segundo_parametro):
+    izq, der = 0, len(v) - 1
+    if primer_parametro == "direccion" and segundo_parametro == "tipo":
+        v = shellsort(v, "direccion_tipo")
+    while izq <= der:
+        med = (izq + der) // 2
+        pivote = v[med]
+
+        if pivote.direccion == primer_parametro and pivote.tipo == segundo_parametro:
+            print(f"\n\033[92m El envío encontrado es: {pivote}\033[0m")
+            return
+
+        if pivote.direccion > primer_parametro:
+            der = med - 1
+        else:
+            izq = med + 1
+
+    print("\n\033[91m ¡No se ha encontrado el envío!\033[0m")
