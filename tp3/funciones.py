@@ -10,33 +10,25 @@ def procesar_linea(linea):
     return envio
 
 
-def shellsort(envios, parametro="cp"):
+def shellsort(envios, parametro='cp'):
     n = len(envios)
-    gap = n // 2  # Inicialmente, el intervalo es la mitad de la longitud de la lista
+    gap = n // 2
 
-    # Mientras el intervalo sea mayor que 0
     while gap > 0:
-        # Realizamos un ordenamiento por inserción usando el intervalo actual
         for i in range(gap, n):
             temp = envios[i]
             j = i
-
-            # Comparar los elementos separados por el intervalo según el parámetro especificado
             while j >= gap:
-                if parametro == "direccion":
+                if parametro == 'direccion':
                     compare1 = envios[j - gap].direccion
                     compare2 = temp.direccion
-                elif parametro == "tipo":
+                elif parametro == 'tipo':
                     compare1 = envios[j - gap].tipo
                     compare2 = temp.tipo
-                elif parametro == "cp":
+                elif parametro == 'cp':
                     compare1 = envios[j - gap].codigo_postal
                     compare2 = temp.codigo_postal
-                else:
-                    compare1 = (envios[j - gap].direccion, envios[j - gap].tipo)
-                    compare2 = (temp.direccion, temp.tipo)
 
-                # Si el elemento separado es mayor que el elemento temporal, se intercambian
                 if compare1 > compare2:
                     envios[j] = envios[j - gap]
                 else:
@@ -44,7 +36,6 @@ def shellsort(envios, parametro="cp"):
                 j -= gap
             envios[j] = temp
 
-        # Reduce el intervalo
         gap //= 2
 
     return envios
@@ -120,7 +111,7 @@ def menu():
         "  2. Carga manual",
         "  3. Mostrar todos los envíos",
         "  4. Buscar por dirección y tipo de envío",
-        "  5. Buscar por código postal",
+        "  5. Buscar por código postal y cambio de forma de pago",
         "  6. Determinar cantidad de envíos",
         "  7. Determinar importe final de los envíos",
         "  8. Determinar envio con mayor importe final",
@@ -136,7 +127,7 @@ def menu():
 
     if not opcion_ingresada.isnumeric() or int(opcion_ingresada) < 0 or int(opcion_ingresada) > 9:
         print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
-        input("\nIngrese cualquier tecla para continuar...")
+        input("Ingrese cualquier tecla para continuar...")
         return menu()
     return int(opcion_ingresada)
 
@@ -287,26 +278,55 @@ def menor_importe(cant, imp_prom):
 
 def busqueda_lineal(v, primer_parametro, segundo_parametro):
     for envio in v:
-        if envio.direccion == primer_parametro and envio.tipo == segundo_parametro:
+        if not segundo_parametro:
+            if envio.direccion == primer_parametro and envio.tipo == segundo_parametro:
+                print(f"\n\033[92m El envío encontrado es: {envio}\033[0m")
+                return envio
+        if envio.cp == primer_parametro:
             print(f"\n\033[92m El envío encontrado es: {envio}\033[0m")
-            return
+            return envio
     print("\n\033[91m ¡No se ha encontrado el envío!\033[0m")
 
-def busqueda_binaria(v, primer_parametro, segundo_parametro):
+
+def busqueda_binaria(v, primer_parametro, segundo_parametro=None):
     izq, der = 0, len(v) - 1
-    if primer_parametro == "direccion" and segundo_parametro == "tipo":
-        v = shellsort(v, "direccion_tipo")
     while izq <= der:
         med = (izq + der) // 2
         pivote = v[med]
 
-        if pivote.direccion == primer_parametro and pivote.tipo == segundo_parametro:
-            print(f"\n\033[92m El envío encontrado es: {pivote}\033[0m")
-            return
+        if segundo_parametro is not None:
+            if pivote.direccion == primer_parametro and pivote.tipo == segundo_parametro:
+                print(f"\n\033[92m El envío encontrado es: {pivote}\033[0m")
+                return pivote
 
-        if pivote.direccion > primer_parametro:
-            der = med - 1
+            if pivote.direccion > primer_parametro:
+                der = med - 1
+            else:
+                izq = med + 1
         else:
-            izq = med + 1
+            if pivote.codigo_postal == primer_parametro:
+                print(f"\n\033[92m El envío encontrado es: {pivote}\033[0m")
+                return pivote
+            if pivote.codigo_postal > primer_parametro:
+                der = med - 1
+            else:
+                izq = med + 1
 
-    print("\n\033[91m ¡No se ha encontrado el envío!\033[0m")
+    print("\n\033[92m ¡No se ha encontrado el envío!\033[0m")
+
+
+def buscar_cp_fp(v, buscar_cp):
+    envio = busqueda_binaria(v, buscar_cp)
+    importe = calc_imp(envio.codigo_postal, envio.tipo,
+                       envio.forma_pago, envio.pais)
+    print(f"\n\033[92m El importe final del envío es: {importe}\033[0m")
+    if int(envio.forma_pago) == 1:
+        envio.forma_pago = "2"
+    else:
+        envio.forma_pago = "1"
+    importe = calc_imp(envio.codigo_postal, envio.tipo,
+                       envio.forma_pago, envio.pais)
+
+    print(f"\n\033[92m Se actualizó la forma de pago del envío: {envio}\033[0m")
+    print(f"\n\033[92m Se actualizó el importe final del envío a: {importe}\033[0m")
+    return envio

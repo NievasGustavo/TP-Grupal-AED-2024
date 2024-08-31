@@ -1,6 +1,6 @@
 from funciones import procesar_archivo, carga_manual, mostrar_vector, \
     menu, cant_envios, importe_final, may_importe, \
-    porcentaje, promedio_importe, menor_importe, busqueda_lineal, busqueda_binaria
+    porcentaje, promedio_importe, menor_importe, busqueda_lineal, busqueda_binaria, shellsort, buscar_cp_fp
 
 
 def principal():
@@ -30,6 +30,7 @@ def principal():
 
         elif opcion == 2:
             carga_manual(v)
+            se_cargo_archivo = False
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 3:
@@ -45,14 +46,14 @@ def principal():
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
                 input("\nIngrese cualquier tecla para continuar...")
                 continue
-           
+
             buscar_direccion = input(
                 "Por favor, introduzca la dirección a buscar (Debe terminar en .): ")
             while not buscar_direccion:
                 print("\n\033[91m ¤ ¡Ingrese una dirección! ¤ \033[0m\n")
                 buscar_direccion = input(
                     "Por favor, introduzca la dirección a buscar (Debe terminar en .): ")
-        
+
             buscar_tipo_env = input(
                 "Por favor, introduzca el tipo de envío a buscar: ")
             while not buscar_tipo_env.isnumeric() or \
@@ -60,15 +61,24 @@ def principal():
                 print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
                 buscar_tipo_env = input(
                     "Por favor, introduzca el tipo de envío a buscar: ")
-            #if se_cargo_archivo:
-            #    busqueda_binaria(v, buscar_direccion, buscar_tipo_env)
-            #    input("\nIngrese cualquier tecla para continuar...")
-            #    continue
+
+            if se_cargo_archivo:
+                v_direccion = shellsort(v, "direccion")
+                busqueda_binaria(
+                    v_direccion, buscar_direccion, buscar_tipo_env)
+                input("\nIngrese cualquier tecla para continuar...")
+                continue
             busqueda_lineal(v, buscar_direccion, buscar_tipo_env)
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 5:
-            pass
+            if len(v) == 0:
+                print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
+                input("\nIngrese cualquier tecla para continuar...")
+                continue
+
+            buscar_cp = input("Por favor, introduzca el Código Postal a buscar: ")
+            buscar_cp_fp(v, buscar_cp)
 
         elif opcion == 6:
             if len(v) == 0:
@@ -83,7 +93,6 @@ def principal():
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
                 input("\nIngrese cualquier tecla para continuar...")
                 continue
-                input("\nIngrese cualquier tecla para continuar...")
             vector_importe = importe_final(v, tipo)
             input("\nIngrese cualquier tecla para continuar...")
 
