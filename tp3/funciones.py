@@ -317,9 +317,12 @@ def busqueda_binaria(v, primer_parametro, segundo_parametro=None):
 
 def buscar_cp_fp(v, buscar_cp):
     envio = busqueda_binaria(v, buscar_cp)
+
+    if not envio:
+        return
     importe = calc_imp(envio.codigo_postal, envio.tipo,
                        envio.forma_pago, envio.pais)
-    print(f"\n\033[92m El importe final del envío es: {importe}\033[0m")
+    print(f"\n\033[92m El importe final del envío es: ${importe}\033[0m")
     if int(envio.forma_pago) == 1:
         envio.forma_pago = "2"
     else:
@@ -327,6 +330,8 @@ def buscar_cp_fp(v, buscar_cp):
     importe = calc_imp(envio.codigo_postal, envio.tipo,
                        envio.forma_pago, envio.pais)
 
-    print(f"\n\033[92m Se actualizó la forma de pago del envío: {envio}\033[0m")
-    print(f"\n\033[92m Se actualizó el importe final del envío a: {importe}\033[0m")
-    return envio
+    print(f"\n\033[92m Se actualizó la forma de pago del envío: {
+          envio}\033[0m")
+    print(f"\n\033[92m Se actualizó el importe final del envío a: ${
+          importe}\033[0m")
+    return v

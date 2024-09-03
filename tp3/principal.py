@@ -77,8 +77,15 @@ def principal():
                 input("\nIngrese cualquier tecla para continuar...")
                 continue
 
-            buscar_cp = input("Por favor, introduzca el Código Postal a buscar: ")
-            buscar_cp_fp(v, buscar_cp)
+            buscar_cp = input(
+                "Por favor, introduzca el Código Postal a buscar: ")
+            while not buscar_cp:
+                print("\n\033[91m ¤ ¡Ingrese un Código Postal! ¤ \033[0m\n")
+                buscar_cp = input(
+                    "Por favor, introduzca el Código Postal a buscar: ")
+            v_actualizado = buscar_cp_fp(v, buscar_cp)
+            if v_actualizado is not None:
+                v = v_actualizado
 
         elif opcion == 6:
             if len(v) == 0:
