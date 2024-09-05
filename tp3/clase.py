@@ -1,5 +1,5 @@
 class Envio:
-    def __init__(self, cp, dir, tipo, fp ):
+    def __init__(self, cp, dir, tipo, fp):
         self.codigo_postal = cp
         self.direccion = dir
         self.tipo = tipo
@@ -13,6 +13,7 @@ class Envio:
         r += " - Forma de pago: " + str(self.forma_pago)
         r += " - Pais: " + self.pais
         return r
+
 
 def determinar_pais(cp):
     """ 1. Indicar el nombre del país de destino basado en el formato de los CP de Argentina y
@@ -41,4 +42,3 @@ def determinar_pais(cp):
         else:
             destino = "Otro"
     return destino
-
