@@ -310,8 +310,8 @@ def menor_importe(v, imp_prom):
             envio.codigo_postal, envio.tipo, envio.forma_pago, envio.pais)
         if imp_prom > importe_final_env:
             cont_imp_men += 1
-    print(f"\n\033[92m La cantidad de envíos menores al promedio es de {
-          cont_imp_men}\033[0m")
+    print("\n\033[92m La cantidad de envíos menores al promedio es de "
+          f"{cont_imp_men}\033[0m")
 
 
 def busqueda_lineal(v, primer_parametro, segundo_parametro=None):
@@ -376,6 +376,12 @@ def buscar_cp_fp(v, buscar_cp):
 
 
 def promedio_todos_importes(v):
+    """
+    Calcula el promedio de importe final de todos los envíos en el vector
+
+    Parametro v: Vector de envíos
+    Retorna el promedio de importe final
+    """
     total = 0
     for envio in v:
         total += calc_imp(envio.codigo_postal, envio.tipo,
@@ -395,6 +401,8 @@ def principal():
         opcion = menu()
 
         if opcion == 1:
+            # Crear el arreglo de envíos con los datos del archivo,
+            # si existia eliminar el arreglo y volver a cargarlo.
             if len(v) > 0:
                 print("\033[91mADVERTENCIA: ¡El vector tiene datos!\033[0m")
                 borrar = input(
@@ -405,16 +413,18 @@ def principal():
                         "¿Desea sobreescribir el mismo? (si: 0, no: 1) ")
                 if int(borrar) == 1:
                     continue
-            se_cargo_archivo = True
             v, tipo = procesar_archivo()
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 2:
+            # Cargar envio manualmente y
+            # cargarlo el envio al final del vector.
             carga_manual(v)
-            se_cargo_archivo = False
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 3:
+            # Mostrar todos los envíos, y si no hay envíos mostrar un mensaje.
+            # Preguntar al usuario si desea mostrar todos los envíos.
             if len(v) == 0:
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
                 input("\nIngrese cualquier tecla para continuar...")
@@ -423,6 +433,8 @@ def principal():
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 4:
+            # Buscar por dirección y tipo de envío el primer envío que coincida.
+            # Si no hay envíos mostrar un mensaje.
             if len(v) == 0:
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
                 input("\nIngrese cualquier tecla para continuar...")
@@ -447,6 +459,9 @@ def principal():
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 5:
+            # Buscar por Código Postal y cambiar de forma de pago
+            # el primer envío que coincida.
+            # Si no hay envíos mostrar un mensaje.
             if len(v) == 0:
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
                 input("\nIngrese cualquier tecla para continuar...")
@@ -463,6 +478,9 @@ def principal():
                 v = v_actualizado
 
         elif opcion == 6:
+            # Determinar cantidad de envíos por tipo de envío segun el
+            # control de direcciones.
+            # Si no hay envíos mostrar un mensaje.
             if len(v) == 0:
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
                 input("\nIngrese cualquier tecla para continuar...")
@@ -471,6 +489,9 @@ def principal():
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 7:
+            # Determinar importe final de los envíos segun el
+            # control de direcciones.
+            # Si no hay envíos mostrar un mensaje.
             if len(v) == 0:
                 print("\n\033[91mADVERTENCIA: ¡Cargue un envio!\033[0m")
                 input("\nIngrese cualquier tecla para continuar...")
@@ -479,6 +500,9 @@ def principal():
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 8:
+            # Determinar el tipo de envio con mayor importe final.
+            # Y que porcentaje representa sobre el total de importes
+            # finales de todos los envios.
             if len(vector_importe) == 0:
                 print(
                     "\n\033[91mADVERTENCIA: ¡Debe calcular los importes"
@@ -490,6 +514,8 @@ def principal():
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 9:
+            # Determinar el promedio de importe final de todos los envios.
+            # Y cuantos son menores al promedio.
             if len(vector_importe) == 0:
                 print(
                     "\n\033[91mADVERTENCIA: ¡Debe calcular los importes"
