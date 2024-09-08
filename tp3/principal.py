@@ -372,8 +372,6 @@ def buscar_cp_fp(v, buscar_cp):
     else:
         envio.forma_pago = "1"
     print(f"\n\033[92m Se actualizo la forma de pago: \n{envio}\033[0m")
-    # TODO: Pensar como actualizar el array de envios
-    v[-1] = envio
     return v
 
 
