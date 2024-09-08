@@ -10,15 +10,15 @@ def procesar_linea(linea):
     return envio
 
 
-def selection_sort(envios, parametro='cp'):
+def selection_sort(envios, parametro="cp"):
     """
     Ordena un vector de envios segun el parametro seleccionado
 
     Parametro envios: Vector de envios a ordenar
     Parametro parametro: Parametro segun el cual se ordena el vector
-        'cp': Ordena por codigo postal
-        'direccion': Ordena por direccion
-        'tipo': Ordena por tipo de envio
+        "cp": Ordena por codigo postal
+        "direccion": Ordena por direccion
+        "tipo": Ordena por tipo de envio
 
     Retorna el vector de envios ordenado
     """
@@ -26,13 +26,13 @@ def selection_sort(envios, parametro='cp'):
     for i in range(n-1):
         min_idx = i
         for j in range(i+1, n):
-            if parametro == 'direccion':
+            if parametro == "direccion":
                 if envios[j].direccion < envios[min_idx].direccion:
                     min_idx = j
-            elif parametro == 'tipo':
+            elif parametro == "tipo":
                 if envios[j].tipo < envios[min_idx].tipo:
                     min_idx = j
-            elif parametro == 'cp':
+            elif parametro == "cp":
                 if envios[j].codigo_postal < envios[min_idx].codigo_postal:
                     min_idx = j
         envios[i], envios[min_idx] = envios[min_idx], envios[i]
@@ -104,7 +104,7 @@ def mostrar_vector(v):
             print("\n\033[91m ¤ ¡Opcion no valida! ¤ \033[0m\n")
             nro_mostrar = input("Ingrese la cantidad de envios a mostrar: ")
         for i in range(int(nro_mostrar)):
-            print(f"{i}) {v[i]}")
+            print(f"{i + 1}) {v[i]}")
 
 
 def menu():
@@ -248,6 +248,7 @@ def importe_final(v, tipo):
                 if 0 <= tipo_envio or tipo_envio <= 6:
                     cant[tipo_envio] += calc_imp(envio.codigo_postal,
                                                  envio.tipo, envio.forma_pago, envio.pais)
+
     else:
         for envio in v:
             tipo_envio = int(envio.tipo)
@@ -278,7 +279,8 @@ def may_importe(cant):
         else:
             if cant[may] < cant[i]:
                 may = i
-    print(f"\n\033[92m El mayor importe final es de ${cant[may]} que pertenece al envío de tipo {may}\033[0m")
+    print(f"\n\033[92m El mayor importe final es de ${
+          cant[may]} que pertenece al envío de tipo {may}\033[0m")
 
     return may
 
@@ -287,8 +289,9 @@ def porcentaje(cant, may_imp):
     total = 0
     for monto in cant:
         total += monto
-    porcentaje_imp = int((cant[may_imp] / total) * 100)
-    print(f"\n\033[92m El mayor importe final representa {porcentaje_imp}% del total de envíos\033[0m")
+    porcentaje_imp = round((cant[may_imp] / total) * 100, 2)
+    print(f"\n\033[92m El mayor importe final representa {
+          porcentaje_imp}% del total de envíos\033[0m")
 
 
 def promedio_importe(cant):
@@ -296,17 +299,19 @@ def promedio_importe(cant):
     for monto in cant:
         total += monto
     prom = int(total / len(cant))
-    print(f"\n\033[92m El promedio de importe final es de ${prom}\033[0m")
 
     return prom
 
 
-def menor_importe(cant, imp_prom):
+def menor_importe(v, imp_prom):
     cont_imp_men = 0
-    for monto in cant:
-        if imp_prom > monto:
+    for envio in v:
+        importe_final_env = calc_imp(
+            envio.codigo_postal, envio.tipo, envio.forma_pago, envio.pais)
+        if imp_prom > importe_final_env:
             cont_imp_men += 1
-    print(f"\n\033[92m La cantidad de envíos menores al promedio es de {cont_imp_men}\033[0m")
+    print(f"\n\033[92m La cantidad de envíos menores al promedio es de {
+          cont_imp_men}\033[0m")
 
 
 def busqueda_lineal(v, primer_parametro, segundo_parametro=None):
@@ -358,7 +363,8 @@ def buscar_cp_fp(v, buscar_cp):
     Parametro buscar_cp: Código postal a buscar
     Retorna el vector actualizado
     """
-    envio = busqueda_binaria(v, buscar_cp)
+    v_ordenado = selection_sort(v)
+    envio = busqueda_binaria(v_ordenado, buscar_cp)
     if not envio:
         return
     if int(envio.forma_pago) == 1:
@@ -366,7 +372,19 @@ def buscar_cp_fp(v, buscar_cp):
     else:
         envio.forma_pago = "1"
     print(f"\n\033[92m Se actualizo la forma de pago: \n{envio}\033[0m")
+    # TODO: Pensar como actualizar el array de envios
+    v[-1] = envio
     return v
+
+
+def promedio_todos_importes(v):
+    total = 0
+    for envio in v:
+        total += calc_imp(envio.codigo_postal, envio.tipo,
+                          envio.forma_pago, envio.pais)
+    prom = int(total / len(v))
+    print(f"\n\033[92m El promedio de importe final es de ${prom}\033[0m")
+    return prom
 
 
 def principal():
@@ -375,7 +393,6 @@ def principal():
     tipo = "HC"
     vector_importe = []
     may_imp = imp_menor = 0
-    se_cargo_archivo = False
     while opcion != 0:
         opcion = menu()
 
@@ -428,12 +445,6 @@ def principal():
                 buscar_tipo_env = input(
                     "Por favor, introduzca el tipo de envío a buscar: ")
 
-            if se_cargo_archivo:
-                v_direccion = selection_sort(v, "direccion")
-                busqueda_binaria(
-                    v_direccion, buscar_direccion, buscar_tipo_env)
-                input("\nIngrese cualquier tecla para continuar...")
-                continue
             busqueda_lineal(v, buscar_direccion, buscar_tipo_env)
             input("\nIngrese cualquier tecla para continuar...")
 
@@ -487,8 +498,10 @@ def principal():
                     " finales de los envios!\033[0m")
                 input("\nIngrese cualquier tecla para continuar...")
                 continue
-            imp_menor = promedio_importe(vector_importe)
-            menor_importe(vector_importe, imp_menor)
+
+            imp_menor = promedio_todos_importes(v)
+            menor_importe(v, imp_menor)
+
             input("\nIngrese cualquier tecla para continuar...")
 
         elif opcion == 0:
