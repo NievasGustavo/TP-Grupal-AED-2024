@@ -45,29 +45,18 @@ def cargar_archivo():
 def carga_manual():
     if os.path.exists("envios.dat"):
         file = open("envios.dat", "ab")
-        cp = input("Ingrese el Código Postal: ")
-        dir = input("Ingrese la Dirección: ")
-        tipo = input("Ingrese el Tipo de envío (1. Retiro en sucursal, 2. Envío a domicilio, 3. Envío a persona): ")
-        helpers.validador_numeros(tipo, 1, 3)
-        fp = input("Ingrese la Forma de Pago (1. Efectivo, 2. Tarjeta): ")
-        helpers.validador_numeros(fp, 1, 2)
-        envio = Envio(cp, dir, tipo, fp)
-        pickle.dump(envio, file)
-        file.close()
-        print("\n\033[92mSe cargo el envío\033[0m\n")
     else:
         file = open("envios.dat", "wb")
-        cp = input("Ingrese el Código Postal: ")
-        dir = input("Ingrese la Dirección: ")
-        tipo = input("Ingrese el Tipo de envío (1. Retiro en sucursal, 2. Envío a domicilio, 3. Envío a persona): ")
-        helpers.validador_numeros(tipo, 1, 3)
-        fp = input("Ingrese la Forma de Pago (1. Efectivo, 2. Tarjeta): ")
-        helpers.validador_numeros(fp, 1, 2)
-        envio = Envio(cp, dir, tipo, fp)
-        pickle.dump(envio, file)
-        file.close()
-        print("\n\033[92mSe cargo el envío\033[0m\n")
-
+    cp = input("Ingrese el Código Postal: ")
+    dir = input("Ingrese la Dirección: ")
+    tipo = input("Ingrese el Tipo de envío (1. Retiro en sucursal, 2. Envío a domicilio, 3. Envío a persona): ")
+    helpers.validador_numeros(tipo, 1, 3)
+    fp = input("Ingrese la Forma de Pago (1. Efectivo, 2. Tarjeta): ")
+    helpers.validador_numeros(fp, 1, 2)
+    envio = Envio(cp, dir, tipo, fp)
+    pickle.dump(envio, file)
+    file.close()
+    print("\n\033[92mSe cargo el envío\033[0m\n")
 
 def ver_envios():
     if os.path.exists("envios.dat"):
