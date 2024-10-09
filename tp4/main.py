@@ -8,26 +8,53 @@ ARCHIVO_BINARIO = "envios.pydb"
 ARCHIVO_CSV = "envios-tp4.csv"
 
 
+def mostrar_warning(mensaje):
+    max_car = 43
+
+    if len(mensaje) > max_car:
+        palabras = mensaje.split()
+        renglones = []
+        renglon_actual = ""
+
+        for palabra in palabras:
+            if len(renglon_actual) + len(palabra) + 1 <= max_car:
+                renglon_actual += (palabra + " ")
+            else:
+                renglones.append(renglon_actual.rstrip())
+                renglon_actual = palabra + " "
+        renglones.append(renglon_actual.rstrip())
+
+    else:
+        renglones = [mensaje]
+
+    print("\n\033[91m╔═════════════════════════════════════════════╗")
+    for renglon in renglones:
+        print(f"║ {renglon:<43} ║")
+    print("╚═════════════════════════════════════════════╝\033[0m")
+
+
 def menu():
-    opciones = ["╔═══════════════════════════╗",
-                "║       Menu Principal      ║",
-                "╠═══════════════════════════╣ ",
-                "║ 1. Crear archivo          ║ ",
-                "║ 2. Cargar manual          ║ ",
-                "║ 3. Ver envios             ║ ",
-                "║ 4. ver por codigo postal  ║ ",
-                "║ 5. ver por direccion      ║ ",
-                "║ 6. Cargar archivo         ║ ",
-                "║ 7. Cargar archivo         ║ ",
-                "║ 8. Cargar archivo         ║ ",
-                "║ 0. Salir                  ║ ",
-                "╚═══════════════════════════╝"]
+    opciones = ["╔═════════════════════════════════════════════╗",
+                "║               Menu Principal                ║",
+                "╠═════════════════════════════════════════════╣ ",
+                "║ 1. Crear archivo                            ║ ",
+                "║ 2. Cargar manual                            ║ ",
+                "║ 3. Ver envios                               ║ ",
+                "║ 4. Ver por codigo postal                    ║ ",
+                "║ 5. Ver por direccion                        ║ ",
+                "║ 6. Mostrar todas las combinaciones posibles ║ ",
+                "║ 7. Mostrar por tipo de envío y forma de pago║ ",
+                "║ 8. Cargar archivo                           ║ ",
+                "║ 0. Salir                                    ║ ",
+                "╚═════════════════════════════════════════════╝"]
     for opcion in opciones:
         print(opcion)
 
     op = input("Ingrese una opcion: ")
     while not op.isnumeric() or int(op) < 0 or int(op) > 8:
-        print("\n\033[91m ¡Ingrese una opción valida! \033[0m\n")
+        mostrar_warning("Opcion no valida")
+        for opcion in opciones:
+            print(opcion)
         op = input("Ingrese una opcion: ")
     return int(op)
 
@@ -48,7 +75,7 @@ def cargar_archivo():
         archivo_binario.close()
         print("\n\033[92mSe cargo el archivo\033[0m\n")
     else:
-        print("\n\033[91mEl archivo csv no existe\033[0m\n")
+        mostrar_warning("No se encontro el archivo CSV")
 
 
 def carga_manual():
@@ -81,7 +108,7 @@ def ver_envios():
         file.close()
         print(f"\n\033[92mSe muestran {cont} envios\033[0m\n")
     else:
-        print("\n\033[91mNo hay envios\033[0m\n")
+        mostrar_warning("No se encontro el archivo binario")
 
 
 def mostrar_envio_cp():
@@ -98,7 +125,7 @@ def mostrar_envio_cp():
         file.close()
         print(f"\n\033[92mSe han mostrado {cont} envios\033[0m\n")
     else:
-        print("\n\033[91mNo hay envios\033[0m\n")
+        mostrar_warning("No se encontro el archivo binario")
 
 
 def mostrar_envio_dir():
@@ -112,13 +139,11 @@ def mostrar_envio_dir():
                 print(f"\033[92m{envio}'\033[0m\n")
                 file.close()
                 return
-        print("\n\033[91m╔═══════════════════════════╗\033[0m")
-        print("\033[91m║ No se encontro el envío   ║\033[0m")
-        print("\033[91m╚═══════════════════════════╝\033[0m")
+        mostrar_warning("No se encontro el envío")
         file.close()
         print()
     else:
-        print("\n\033[91mNo hay envios\033[0m\n")
+        mostrar_warning("No se encontro el archivo binario")
 
 
 def calcular_envios():
@@ -130,31 +155,52 @@ def calcular_envios():
             envio = pickle.load(file)
             cont[int(envio.tipo) - 1][int(envio.forma_pago) - 1] += 1
         file.close()
+        print(cont)
         for i in range(7):
             for j in range(2):
                 if cont[i][j] > 0:
                     print(
-                        f'\033[92mTipo de envío {i}, Forma de pago {j}: {cont[i][j]} envíos\033[0m')
+                        f'\033[92mTipo de envío {i}, Forma de pago {j+1}: {cont[i] [j]} envíos\033[0m')
         print()
         return cont
     else:
-        print("\n\033[91mNo hay envios\033[0m\n")
+        print("\n\033[91m╔═════════════════════════════════════════════╗")
+        print("║ No se encontro el archivo binario.          ║")
+        print("╚═════════════════════════════════════════════╝\033[0m")
+
+
+def contar_matriz(cont):
+    total_por_tipo = [0] * 7
+    total_por_pago = [0] * 2
+
+    for i in range(7):
+        for j in range(2):
+            total_por_tipo[i] += cont[i][j]
+            total_por_pago[j] += cont[i][j]
+
+    print("\033[92mTotal por tipo de envío:")
+    for i in range(7):
+        print(f"\tTipo {i}: {total_por_tipo[i]} envíos")
+    print()
+
+    print("Total por forma de pago:")
+    for i in range(2):
+        print(f"\tForma de pago {i+1}: {total_por_pago[i]} envíos")
+    print("\033[0m")
 
 
 def main():
     op = -1
-    v = []
+    cont = []
     while op != 0:
         op = menu()
         if op == 1:
             if os.path.exists(ARCHIVO_BINARIO):
-                print("\n\033[91m╔═══════════════════════════╗\033[0m")
-                print(
-                    "\033[91m║ El archivo ya existe.     ║\n║ ¿Desea sobrescribirlo?    ║\033[0m")
-                print("\033[91m╚═══════════════════════════╝\033[0m")
+                mostrar_warning(
+                    "Ya existe un archivo binario. ¿Desea sobrescribirlo?")
                 respuesta = input(
-                    "Ingrese 1 para sobrescribirlo o cualquier otra tecla para continuar: ")
-                if respuesta == "1":
+                    "Ingrese y para sobrescribirlo o cualquier otra tecla para continuar: ")
+                if respuesta == "y":
                     cargar_archivo()
             else:
                 cargar_archivo()
@@ -168,9 +214,12 @@ def main():
         elif op == 5:
             mostrar_envio_dir()
         elif op == 6:
-            calcular_envios()
+            cont = calcular_envios()
         elif op == 7:
-            print("\n\033[91mFuncionalidad no disponible\033[0m\n")
+            if not cont:
+                print("\n\033[91mDebe ir por la opcion 6\033[0m\n")
+            else:
+                contar_matriz(cont)
         elif op == 8:
             print("\n\033[91mFuncionalidad no disponible\033[0m\n")
         elif op == 0:
