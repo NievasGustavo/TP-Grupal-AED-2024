@@ -42,6 +42,48 @@ def determinar_pais(cp):
             destino = "Otro"
     return destino
 
+def calc_imp(cp, env, pago, destino):
+    # 3. Calcular el importe inicial del envío.
+    inicial = 0
+    final = 0
+    if env == "0":
+        inicial = 1100
+    if env == "1":
+        inicial = 1800
+    if env == "2":
+        inicial = 2450
+    if env == "3":
+        inicial = 8300
+    if env == "4":
+        inicial = 10900
+    if env == "5":
+        inicial = 14300
+    if env == "6":
+        inicial = 17900
+    if destino != "Argentina":
+        if destino in ("Bolivia", "Paraguay") or destino == "Uruguay" and int(cp[0]) == 1:
+            inicial = int(inicial * 1.20)
+        elif destino in ("Chile", "Uruguay"):
+            inicial = int(inicial * 1.25)
+        elif destino == "Brasil":
+            if 0 <= int(cp[0]) <= 3:
+                inicial = int(inicial * 1.25)
+            elif 4 <= int(cp[0]) <= 7:
+                inicial = int(inicial * 1.30)
+            else:
+                inicial = int(inicial * 1.20)
+        else:
+            inicial = int(inicial * 1.50)
+        # Calculamos el pago final, aplicando el descuento
+        #  del 10% al importe inicial si es en efectivo
+    if pago == "1":
+        final = int(inicial * 0.90)
+    if pago == "2":
+        final = inicial
+    return final
+
+
 if __name__ == "__main__":
     e = Envio("12345", "Calle 1", 1, 1)
     print(e)
+

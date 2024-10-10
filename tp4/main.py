@@ -1,36 +1,11 @@
 import os
 import pickle
-from clase import Envio
-import helpers
+from clase import Envio, calc_imp
+from helpers import mostrar_warning, validador_numeros
 
 
 ARCHIVO_BINARIO = "envios.pydb"
 ARCHIVO_CSV = "envios-tp4.csv"
-
-
-def mostrar_warning(mensaje):
-    max_car = 43
-
-    if len(mensaje) > max_car:
-        palabras = mensaje.split()
-        renglones = []
-        renglon_actual = ""
-
-        for palabra in palabras:
-            if len(renglon_actual) + len(palabra) + 1 <= max_car:
-                renglon_actual += (palabra + " ")
-            else:
-                renglones.append(renglon_actual.rstrip())
-                renglon_actual = palabra + " "
-        renglones.append(renglon_actual.rstrip())
-
-    else:
-        renglones = [mensaje]
-
-    print("\n\033[91m╔═════════════════════════════════════════════╗")
-    for renglon in renglones:
-        print(f"║ {renglon:<43} ║")
-    print("╚═════════════════════════════════════════════╝\033[0m")
 
 
 def menu():
@@ -87,9 +62,9 @@ def carga_manual():
     while dir == "":
         dir = input("Ingrese una Dirección valida: ")
     tipo = input("Ingrese el Tipo de envío: ")
-    helpers.validador_numeros(tipo, 1, 3)
-    fp = input("Ingrese la Forma de Pago (1. Efectivo, 2. Tarjeta): ")
-    helpers.validador_numeros(fp, 1, 2)
+    validador_numeros(tipo, 0, 6)
+    fp = input("Ingrese la Forma de Pago: ")
+    validador_numeros(fp, 1, 2)
     envio = Envio(cp, dir, tipo, fp)
     pickle.dump(envio, file)
     file.close()
@@ -103,10 +78,10 @@ def ver_envios():
         cont = 0
         while file.tell() < size:
             envio = pickle.load(file)
-            print(envio)
+            print(f"\n\033[92m{envio}")
             cont += 1
         file.close()
-        print(f"\n\033[92mSe muestran {cont} envios\033[0m\n")
+        print(f"Se muestran {cont} envios\033[0m\n")
     else:
         mostrar_warning("No se encontro el archivo binario")
 
@@ -114,16 +89,17 @@ def ver_envios():
 def mostrar_envio_cp():
     if os.path.exists(ARCHIVO_BINARIO):
         cp = input("Ingrese el Código Postal: ")
+        print()
         file = open(ARCHIVO_BINARIO, "rb")
         size = os.path.getsize(ARCHIVO_BINARIO)
         cont = 0
         while file.tell() < size:
             envio = pickle.load(file)
             if envio.codigo_postal == cp:
-                print(envio)
+                print(f"\033[92m{envio}")
                 cont += 1
         file.close()
-        print(f"\n\033[92mSe han mostrado {cont} envios\033[0m\n")
+        print(f"\nSe han mostrado {cont} envios\033[0m\n")
     else:
         mostrar_warning("No se encontro el archivo binario")
 
@@ -136,7 +112,7 @@ def mostrar_envio_dir():
         while file.tell() < size:
             envio = pickle.load(file)
             if envio.direccion == direc:
-                print(f"\033[92m{envio}'\033[0m\n")
+                print(f"\033[92m{envio}\033[0m\n")
                 file.close()
                 return
         mostrar_warning("No se encontro el envío")
@@ -155,18 +131,15 @@ def calcular_envios():
             envio = pickle.load(file)
             cont[int(envio.tipo) - 1][int(envio.forma_pago) - 1] += 1
         file.close()
-        print(cont)
         for i in range(7):
-            for j in range(2):
-                if cont[i][j] > 0:
-                    print(
-                        f'\033[92mTipo de envío {i}, Forma de pago {j+1}: {cont[i] [j]} envíos\033[0m')
-        print()
+            print(f'\033[92mTipo de envío {i}:')
+            print(f'\tForma de pago 1: {cont[i][0]} envíos')
+            print(f'\tForma de pago 2: {cont[i][1]} envíos')
+            print()  # Espacio entre tipos de envío
+        print("\033[0m")
         return cont
     else:
-        print("\n\033[91m╔═════════════════════════════════════════════╗")
-        print("║ No se encontro el archivo binario.          ║")
-        print("╚═════════════════════════════════════════════╝\033[0m")
+        mostrar_warning("No se encontro el archivo binario")
 
 
 def contar_matriz(cont):
@@ -187,6 +160,56 @@ def contar_matriz(cont):
     for i in range(2):
         print(f"\tForma de pago {i+1}: {total_por_pago[i]} envíos")
     print("\033[0m")
+
+# TODO: Corregir el ShellSort
+
+
+def shellsort(envios):
+    n = len(envios)
+    gap = n // 2
+    while gap > 0:
+        for i in range(gap, n):
+            temp = envios[i]
+            j = i
+            while j >= gap and envios[j - gap].codigo_postal > temp.codigo_postal:
+                envios[j] = envios[j - gap]
+                j -= gap
+            envios[j] = temp
+        gap //= 2
+
+
+def promedio_importes():
+    if os.path.exists(ARCHIVO_BINARIO):
+        file = open(ARCHIVO_BINARIO, "rb")
+        size = os.path.getsize(ARCHIVO_BINARIO)
+        total = 0
+        cont = 0
+        envs = []
+        env_may = []
+        while file.tell() < size:
+            envio = pickle.load(file)
+            cont += 1
+            total += calc_imp(envio.codigo_postal, envio.tipo,
+                              envio.forma_pago, envio.pais)
+            envs.append(envio)
+        if cont == 0:
+            promedio = 0
+        else:
+            promedio = total / cont
+        for envio in envs:
+            if calc_imp(envio.codigo_postal, envio.tipo,
+                        envio.forma_pago, envio.pais) > promedio:
+                env_may.append(envio)
+        shellsort(env_may)
+        file.close()
+        print(f"\033[92mPromedio de importes: {promedio}")
+        print("Envios mayores que el promedio ordenados por código postal:")
+        for envio in env_may:
+            print(
+                f"{envio}")
+        print(f"Se mostraron {len(env_may)} envios\033[0m\n")
+    else:
+        mostrar_warning("No se encontro el archivo binario")
 
 
 def main():
@@ -217,11 +240,12 @@ def main():
             cont = calcular_envios()
         elif op == 7:
             if not cont:
-                print("\n\033[91mDebe ir por la opcion 6\033[0m\n")
+                mostrar_warning(
+                    "Debe ir por la opcion 6 antes de realizar esta accion")
             else:
                 contar_matriz(cont)
         elif op == 8:
-            print("\n\033[91mFuncionalidad no disponible\033[0m\n")
+            promedio_importes()
         elif op == 0:
             print("\n\033[92mSaliendo...\033[0m\n")
 
