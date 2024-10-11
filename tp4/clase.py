@@ -1,18 +1,20 @@
 class Envio:
-    def __init__(self, cp, dir, tipo, fp):
+    def __init__(self, cp, direc, tipo, fp):
         self.codigo_postal = cp
-        self.direccion = dir
+        self.direccion = direc
         self.tipo = tipo
         self.forma_pago = fp
         self.pais = determinar_pais(self.codigo_postal)
+        self.importe = calc_imp(self.codigo_postal, self.tipo, self.forma_pago, self.pais)
 
     def __str__(self):
         r = "Código Postal: " + self.codigo_postal
         r += " - Dirección de destino: " + self.direccion
-        r += " - Tipo de envío: " + str(self.tipo)
+        r += " - Tipo de envio_pruebaío: " + str(self.tipo)
         r += " - Forma de pago: " + str(self.forma_pago)
         r += " - Pais: " + self.pais
         return r
+
 
 def determinar_pais(cp):
     """ 1. Indicar el nombre del país de destino basado en el formato de los CP de Argentina y
@@ -42,8 +44,9 @@ def determinar_pais(cp):
             destino = "Otro"
     return destino
 
+
 def calc_imp(cp, env, pago, destino):
-    # 3. Calcular el importe inicial del envío.
+    # 3. Calcular el importe inicial del envio_pruebaío.
     inicial = 0
     final = 0
     if env == "0":
@@ -62,28 +65,28 @@ def calc_imp(cp, env, pago, destino):
         inicial = 17900
     if destino != "Argentina":
         if destino in ("Bolivia", "Paraguay") or destino == "Uruguay" and int(cp[0]) == 1:
-            inicial = int(inicial * 1.20)
+            inicial = inicial * 1.20
         elif destino in ("Chile", "Uruguay"):
-            inicial = int(inicial * 1.25)
+            inicial = inicial * 1.25
         elif destino == "Brasil":
             if 0 <= int(cp[0]) <= 3:
-                inicial = int(inicial * 1.25)
+                inicial = inicial * 1.25
             elif 4 <= int(cp[0]) <= 7:
-                inicial = int(inicial * 1.30)
+                inicial = inicial * 1.30
             else:
-                inicial = int(inicial * 1.20)
+                inicial = inicial * 1.20
         else:
-            inicial = int(inicial * 1.50)
+            inicial = inicial * 1.50
         # Calculamos el pago final, aplicando el descuento
         #  del 10% al importe inicial si es en efectivo
     if pago == "1":
-        final = int(inicial * 0.90)
+        final = inicial * 0.90
     if pago == "2":
         final = inicial
-    return final
+    return round(final, 2)
 
 
 if __name__ == "__main__":
-    e = Envio("12345", "Calle 1", 1, 1)
-    print(e)
-
+    envio_prueba = Envio("6X626-325", "Oscar Freire 456.", "1", "1")
+    print(envio_prueba)
+    print(f"El importe es: {envio_prueba.importe}")
